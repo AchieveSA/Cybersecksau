@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<title>اعرف عقلك | Know Your Mind</title>
+</head>
+<body>
+<canvas id="bg"></canvas><div class="vignette"></div>
+<svg class="shield a" viewBox="0 0 100 120" fill="none"><path d="M50 4 L92 20 V58 C92 86 72 106 50 116 C28 106 8 86 8 58 V20 Z" stroke="#a7b4ff" stroke-width="3" fill="rgba(90,80,220,.25)"/><rect x="34" y="52" width="32" height="28" rx="5" fill="#c7d0ff"/><path d="M40 52 V42 a10 10 0 0 1 20 0 V52" stroke="#c7d0ff" stroke-width="5" fill="none"/></svg><svg class="shield b" viewBox="0 0 100 120" fill="none"><path d="M50 4 L92 20 V58 C92 86 72 106 50 116 C28 106 8 86 8 58 V20 Z" stroke="#a7b4ff" stroke-width="3" fill="rgba(90,80,220,.25)"/><rect x="34" y="52" width="32" height="28" rx="5" fill="#c7d0ff"/><path d="M40 52 V42 a10 10 0 0 1 20 0 V52" stroke="#c7d0ff" stroke-width="5" fill="none"/></svg><svg class="shield c" viewBox="0 0 100 120" fill="none"><path d="M50 4 L92 20 V58 C92 86 72 106 50 116 C28 106 8 86 8 58 V20 Z" stroke="#a7b4ff" stroke-width="3" fill="rgba(90,80,220,.25)"/><rect x="34" y="52" width="32" height="28" rx="5" fill="#c7d0ff"/><path d="M40 52 V42 a10 10 0 0 1 20 0 V52" stroke="#c7d0ff" stroke-width="5" fill="none"/></svg>
+<main class="wrap">
+  <div class="topbar">
+    <a class="brand" href="index.html"><span class="dot"></span> عقلك بياناتك</a>
+    <span class="pill">🧠 المحطة الأولى · Know Your Mind</span>
+  </div>
+
+  <!-- INTRO -->
+  <section class="screen active" id="s-intro">
+    <h1 class="hero">اعرف عقلك</h1>
+    <p class="sub">٦ أسئلة فقط… وراح نقول لك مين أنت في العالم الرقمي 👀<br><b>جاهز؟</b></p>
+    <div class="chips">
+      <span class="chip">🌀 المفكّر العميق</span><span class="chip">💬 الكتاب المفتوح</span><span class="chip">🔐 العقل الخاص</span>
+      <span class="chip">🔎 المستكشف الرقمي</span><span class="chip">🛡️ الحامل الصامت</span><span class="chip">⏰ صانع الروتين</span>
+    </div>
+    <div class="center" style="margin-top:26px"><button class="btn" id="start">ابدأ الاختبار 🚀</button></div>
+    <p class="tagline">( لأن ما يدور في عقلك · يستحق الحماية )</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="s-quiz">
+    <div class="progress" id="prog"></div>
+    <div class="card" id="qcard">
+      <div class="qnum" id="qnum"></div>
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+  </section>
+
+  <!-- ANALYZING -->
+  <section class="screen" id="s-scan">
+    <div class="card">
+      <div class="brain-wrap"><div class="brain">🧠</div></div>
+      <p class="scan" id="scanline">جارٍ تحليل إجاباتك…</p>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="s-result">
+    <div class="card">
+      <div class="result-head">
+        <span class="result-emoji" id="r-emoji"></span>
+        <div class="result-kicker">شخصيتك الرقمية هي</div>
+        <div class="result-title" id="r-title"></div>
+        <div class="result-en" id="r-en"></div>
+      </div>
+      <p class="result-desc" id="r-desc"></p>
+      <div class="traits" id="r-traits"></div>
+      <div class="center"><button class="btn" id="to-reveal">لحظة… 👀</button></div>
+    </div>
+  </section>
+
+  <!-- REVEAL -->
+  <section class="screen" id="s-reveal">
+    <div class="card">
+      <span class="eyes">👀</span>
+      <div class="reveal-title">لحظة… كيف عرفنا كل هذا عنك من ٦ أسئلة فقط؟</div>
+      <div class="insights" id="insights"></div>
+      <div class="punch fade-up" id="punch" style="opacity:0">
+        <div class="big">أنت أعطيتنا ٦ إجابات فقط.</div>
+        <div class="huge">تخيّل…</div>
+        <p>ماذا يمكن أن يعرف تطبيق تستخدمه يوميًا من <b style="color:#fff">مئات المحادثات</b>؟</p>
+      </div>
+      <div class="row" style="margin-top:24px">
+        <a class="btn" href="protect-your-mind.html">المحطة الثانية: احمِ عقلك 🔐</a>
+        <button class="btn ghost" id="again">إعادة الاختبار</button>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>عقلك بياناتك · Cybersecurity × Mental Health</footer>
+<script src="js/bg.js"></script>
+<script src="js/know.js"></script>
+</body>
+</html>
