@@ -59,11 +59,11 @@ test('shared scoring rule normalises a flawless instant run to exactly 1,000', (
 })
 
 test('phone normalisation and display names', () => {
-  assert.equal(normalisePhone('0551234567'), '0551234567')
-  assert.equal(normalisePhone('+966 55 123 4567'), '0551234567')
-  assert.equal(normalisePhone('٠٥٥١٢٣٤٥٦٧'), '0551234567')
-  assert.equal(normalisePhone('551234567'), '0551234567')
-  assert.equal(normalisePhone('0451234567'), null)
+  assert.equal(normalisePhone('0559876543'), '0559876543')
+  assert.equal(normalisePhone('+966 55 987 6543'), '0559876543')
+  assert.equal(normalisePhone('٠٥٥٩٨٧٦٥٤٣'), '0559876543')
+  assert.equal(normalisePhone('559876543'), '0559876543')
+  assert.equal(normalisePhone('0459876543'), null)
   assert.equal(displayName('سارة محمد العتيبي'), 'سارة ا.')
   assert.equal(displayName('نورة'), 'نورة')
   assert.equal(caesar('ABZ', 1), 'BCA')
@@ -72,8 +72,8 @@ test('phone normalisation and display names', () => {
 
 test('registration is once per phone per session and resumes the same player', async () => {
   const { call } = await setup()
-  const a = await join(call, '0551234567')
-  const b = await join(call, '+966551234567', 'اسم آخر')
+  const a = await join(call, '0559876543')
+  const b = await join(call, '+966559876543', 'اسم آخر')
   assert.equal(a.existed, false)
   assert.equal(b.existed, true)
   assert.equal(a.token, b.token)
@@ -84,7 +84,7 @@ test('registration is once per phone per session and resumes the same player', a
 
 test('items never carry the answer, and re-requesting an item does not restart its clock', async () => {
   const { call, clock, store } = await setup()
-  const { token } = await join(call, '0551234567')
+  const { token } = await join(call, '0559876543')
   const st = await call('POST', '/api/run/start', { token, body: { game: 'phish' } })
   const json = JSON.stringify(st)
   assert.ok(!json.includes('verdict') && !json.includes('tell') && !json.includes('"mark"'))
@@ -106,7 +106,7 @@ test('items never carry the answer, and re-requesting an item does not restart i
 
 test('a perfect fast phish run scores 1,000 and the speed bonus and streak matter', async () => {
   const { call, clock, store } = await setup()
-  const { token } = await join(call, '0551234567')
+  const { token } = await join(call, '0559876543')
   const fast = await playQuestions(call, clock, store, token, 'phish', phishRight(store), 0)
   assert.equal(fast.last.result.score, 1000)
   assert.equal(fast.last.result.valid, true)
@@ -125,7 +125,7 @@ test('a perfect fast phish run scores 1,000 and the speed bonus and streak matte
 
 test('quiz: correct answers via shuffled options; best run counts', async () => {
   const { call, clock, store } = await setup()
-  const { token } = await join(call, '0551234567')
+  const { token } = await join(call, '0559876543')
   const r = await playQuestions(call, clock, store, token, 'quiz', quizRight(store), 1)
   assert.ok(r.last.result.score > 900, String(r.last.result.score))
   const zero = await playQuestions(call, clock, store, token, 'quiz', async () => null, 1)
@@ -137,7 +137,7 @@ test('quiz: correct answers via shuffled options; best run counts', async () => 
 
 test('puzzles: sort, three Caesar rounds with retries, permissions, fast bonus', async () => {
   const { call, clock, store } = await setup()
-  const { token } = await join(call, '0551234567')
+  const { token } = await join(call, '0559876543')
   const st = await call('POST', '/api/run/start', { token, body: { game: 'puzzles' } })
   const run = () => store.get(`run/f1/${st.run}`)
   clock.t += 20000
@@ -166,7 +166,7 @@ test('puzzles: sort, three Caesar rounds with retries, permissions, fast bonus',
 
 test('runs over the game maximum are kept but invalid; frozen sessions keep runs off the board', async () => {
   const { call, clock, store } = await setup()
-  const { token } = await join(call, '0551234567')
+  const { token } = await join(call, '0559876543')
   const slow = await playQuestions(call, clock, store, token, 'quiz', quizRight(store), 13) // 10 × (13 + 2) s > 120 s
   assert.equal(slow.last.result.valid, false)
   assert.equal((await call('GET', '/api/me', { token })).best.quiz, null)
@@ -176,7 +176,7 @@ test('runs over the game maximum are kept but invalid; frozen sessions keep runs
   await playQuestions(call, clock, store, token, 'quiz', quizRight(store), 1)
   const pv = await call('POST', '/api/admin/winners/preview', { pin: '9753', body: { s: 'f1' } })
   assert.equal(pv.winners[0].full, 'سارة محمد')
-  assert.equal(pv.winners[0].phone, '0551234567')
+  assert.equal(pv.winners[0].phone, '0559876543')
   const an = await call('POST', '/api/admin/winners/announce', { pin: '9753', body: { s: 'f1' } })
   assert.deepEqual(an.winners.map((w) => w.name), ['سارة م.', 'خالد س.'])
   const after = await playQuestions(call, clock, store, b.token, 'phish', phishRight(store), 0)
@@ -189,10 +189,10 @@ test('runs over the game maximum are kept but invalid; frozen sessions keep runs
 
 test('admin: PIN required, lockout, CSV export, purge phones, reset', async () => {
   const { call } = await setup()
-  await join(call, '0551234567')
+  await join(call, '0559876543')
   assert.equal((await call('GET', '/api/admin/overview')).status, 401)
   const csv = await call('GET', '/api/admin/export?s=f1', { pin: '9753' })
-  assert.ok(csv._text.includes('0551234567'))
+  assert.ok(csv._text.includes('0559876543'))
   const ov = await call('GET', '/api/admin/overview', { pin: '9753' })
   assert.equal(ov.sessions.find((s) => s.id === 'f1').players, 1)
   assert.equal((await call('POST', '/api/admin/purge-phones', { pin: '9753', body: {} })).purged, 1)
