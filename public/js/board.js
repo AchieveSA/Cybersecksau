@@ -3,7 +3,6 @@ import { $, h, api, chrome, GAMES, ORDER, qs, beat, sleep, iso } from '/js/app.j
 import { qrSvg } from '/js/qr.js'
 
 chrome({ header: false })
-$('.band').classList.add('tv-band')
 const COLORS = { phish: '#ff7fe3', puzzles: '#ffd56b', quiz: '#5ee7ff' }
 $('#legend').replaceChildren(...ORDER.map((g) => h('span', {}, h('i', { style: `background:${COLORS[g]}` }), GAMES[g].t)))
 let sid = qs.get('s')

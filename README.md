@@ -3,7 +3,7 @@
 **زاوية الأمن السيبراني والألعاب المصغّرة**: three quick security mini-games on the player's own phone, one shared
 leaderboard on the hall TV, and an admin screen for the club members at the table. Cybersecurity Club × Baseerah Club,
 KSAU-HS Jeddah. Arabic RTL, in the club's poster look (Cairo 900 / IBM Plex Sans Arabic / Inter, violet ground, glass tiles,
-the cyan–magenta glitch on beats only, the footer band).
+the cyan–magenta glitch on beats only).
 
 Live: https://ksaucsclubavtivity.netlify.app (auto-deploys from `master`).
 

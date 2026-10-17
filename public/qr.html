@@ -24,13 +24,12 @@
   .ph .ksau{height:11mm;width:auto}.ph .lockup .mark{height:9mm;width:auto}.ph .pill img{height:7mm;width:auto}
   .pt{font-family:"Cairo";font-weight:900;font-size:15mm;line-height:1.2;text-align:center;margin-top:7mm;color:#fff;
     text-shadow:-.6mm 0 0 rgba(94,231,255,.55),.6mm 0 0 rgba(255,79,216,.5),0 1mm 0 rgba(34,22,110,.45)}
-  .ps{font-family:"Plex";font-weight:700;font-size:5.4mm;text-align:center;margin-top:1.5mm}
+  .ps{font-family:"Plex","Inter";font-weight:700;font-size:5.4mm;text-align:center;margin-top:1.5mm}
   .tag{font-size:3mm;margin-top:2mm}
   .frame{margin-top:6mm;padding:4mm;border-radius:8mm;background:rgba(255,255,255,.14);border:.5mm solid rgba(207,198,255,.6)}
   .qr{width:92mm;background:#fff;border-radius:6mm;padding:4mm}
   .qr svg{display:block;width:100%;height:auto}
   .url{font-family:"Inter";font-weight:700;font-size:4.4mm;color:var(--mint);margin-top:4mm;direction:ltr}
-  .pf{position:absolute;left:0;right:0;bottom:0;height:19mm;background:url("/assets/brand/footer_band.jpg") center/cover}
   @media print{.noprint{display:none}}
   .noprint{position:fixed;top:12px;left:12px;width:auto;z-index:5}
 </style>
@@ -47,11 +46,10 @@
   <p class="tag" id="ptag">STATION 01 · CYBER SECURITY &amp; MINI-GAMES</p>
   <div class="frame"><div class="qr" id="qr"></div></div>
   <div class="url" id="url"></div>
-  <div class="pf"></div>
 </div>
 <script src="/js/vendor/qrcode.js"></script>
 <script type="module">
-import { $, qs } from '/js/app.js'
+import { $, qs, iso } from '/js/app.js'
 import { qrSvg } from '/js/qr.js'
 // ?s=f1 → registration QR for that session · ?t=survey → exit survey · ?base= overrides the domain (used when exporting PNGs)
 const base = (qs.get('base') || location.origin).replace(/\/$/, '')
@@ -60,7 +58,8 @@ const survey = qs.get('t') === 'survey'
 const url = survey ? base + '/survey' : base + '/join?s=' + s
 const short = survey ? base + '/survey' : ['f1', 'm1'].includes(s) ? base + '/' + s : url
 if (survey) { $('#pt').textContent = 'قيّم تجربتك'; $('#ps').textContent = 'ثلاثة أسئلة قبل أن تغادر'; $('#ptag').textContent = 'AI & STARTUP OPEN EXPO · SURVEY' }
-else if (qs.get('label')) $('#ps').textContent = qs.get('label')
+else if (qs.get('label')) $('#ps').textContent = iso(qs.get('label'))
+if (qs.get('base')) document.querySelector('.noprint').remove() // PNG export
 $('#qr').innerHTML = qrSvg(url)
 $('#url').textContent = short.replace(/^https?:\/\//, '')
 </script>

@@ -147,7 +147,7 @@ export const glitchText = (text, cls = '') => h('span', { class: `g ${cls}`.trim
 
 // ---------------------------------------------------------------- page chrome
 const GRID = `<svg viewBox="0 0 1080 460" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".55" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/></linearGradient></defs><g stroke="url(#gl)" stroke-width="1" fill="none"><path d="M-300 460 L460 0 M-100 460 L500 0 M100 460 L540 0 M300 460 L560 0 M500 460 L580 0 M700 460 L600 0 M900 460 L620 0 M1100 460 L660 0 M1300 460 L700 0"/><path d="M0 120 H1080 M0 180 H1080 M0 250 H1080 M0 330 H1080 M0 420 H1080 M0 70 H1080 M0 30 H1080"/></g></svg>`
-export function chrome({ header = true, band = true } = {}) {
+export function chrome({ header = true } = {}) {
   const ground = h('div', { class: 'ground', 'aria-hidden': 'true' })
   ground.innerHTML = GRID
   document.body.prepend(ground)
@@ -161,6 +161,5 @@ export function chrome({ header = true, band = true } = {}) {
     document.body.prepend(top)
     document.body.prepend(ground)
   }
-  if (band) document.body.append(h('footer', { class: 'band', role: 'img', 'aria-label': 'نادي الأمن السيبراني · @Jed_StudentClub · StudentofKSAUHS · عمادة شؤون الطلاب' }))
   if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('/sw.js').catch(() => {})
 }

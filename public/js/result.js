@@ -53,7 +53,7 @@ function spaced(ctx, text, x, y, gap) {
 }
 async function card(r) {
   await Promise.all(['900 80px Cairo', '700 40px Plex', '600 28px Plex', '800 100px Inter', '700 22px Inter'].map((f) => document.fonts.load(f, 'معرض 123')))
-  const [ksau, mark, bas, band] = await Promise.all(['/assets/brand/logo_ksau.png', '/assets/brand/cyber_mark_keyed.png', '/assets/brand/logo_baseerah.png', '/assets/brand/footer_band.jpg'].map(img))
+  const [ksau, mark, bas] = await Promise.all(['/assets/brand/logo_ksau.png', '/assets/brand/cyber_mark_keyed.png', '/assets/brand/logo_baseerah.png'].map(img))
   const W = 1080, cv = document.createElement('canvas')
   cv.width = cv.height = W
   const c = cv.getContext('2d')
@@ -99,9 +99,7 @@ async function card(r) {
   const line = (r.counted && r.valid && r.total > 0) ? `${r.name} · #${r.rank} على اللوحة` : r.name
   c.font = '700 34px Plex'; c.fillStyle = '#ffd56b'; c.fillText(line, 540, 810)
 
-  c.font = '600 26px Plex'; c.fillStyle = '#f4f1ff'; c.fillText('هل تكشف رسالة الاحتيال في 10 ثوانٍ؟ 🔐', 540, 920)
-  const bh = W * band.height / band.width
-  c.drawImage(band, 0, W - bh, W, bh)
+  c.font = '600 26px Plex'; c.fillStyle = '#f4f1ff'; c.fillText('هل تكشف رسالة الاحتيال في 10 ثوانٍ؟ 🔐', 540, 950)
   return new Promise((ok) => cv.toBlob(ok, 'image/png'))
 }
 async function share(r) {
