@@ -53,7 +53,7 @@ function spaced(ctx, text, x, y, gap) {
 }
 async function card(r) {
   await Promise.all(['900 80px Cairo', '700 40px Plex', '600 28px Plex', '800 100px Inter', '700 22px Inter'].map((f) => document.fonts.load(f, 'معرض 123')))
-  const [ksau, mark, bas] = await Promise.all(['/assets/brand/logo_ksau.png', '/assets/brand/cyber_mark_keyed.png', '/assets/brand/logo_baseerah.png'].map(img))
+  const [ksau, mark, bas] = await Promise.all(['/assets/brand/logo_ksau.png', '/assets/brand/cyber_logo.png', '/assets/brand/logo_baseerah.png'].map(img))
   const W = 1080, cv = document.createElement('canvas')
   cv.width = cv.height = W
   const c = cv.getContext('2d')
@@ -68,10 +68,10 @@ async function card(r) {
   c.fillStyle = 'rgba(255,255,255,.03)'; for (let y = 0; y < W; y += 4) c.fillRect(0, y, W, 1)
 
   c.drawImage(ksau, W - 56 - 200, 48, 200, 200 * ksau.height / ksau.width)
-  c.drawImage(mark, 56, 46, 62, 62)
-  c.fillStyle = '#8df2cc'; c.font = '800 28px Inter'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('×', 142, 78)
-  c.fillStyle = 'rgba(255,255,255,.92)'; c.beginPath(); c.roundRect(168, 46, 128, 64, 16); c.fill()
-  c.drawImage(bas, 180, 52, 104, 104 * bas.height / bas.width)
+  c.drawImage(mark, 50, 30, 120, 120 * mark.height / mark.width)
+  c.fillStyle = '#8df2cc'; c.font = '800 28px Inter'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('×', 196, 90)
+  c.fillStyle = 'rgba(255,255,255,.92)'; c.beginPath(); c.roundRect(222, 58, 128, 64, 16); c.fill()
+  c.drawImage(bas, 234, 64, 104, 104 * bas.height / bas.width)
 
   c.direction = 'rtl'; c.textAlign = 'center'; c.textBaseline = 'alphabetic'
   c.font = '600 28px Plex'; c.fillStyle = '#cfc6ff'; c.fillText('نادي الأمن السيبراني × نادي بصيرة', 540, 205)

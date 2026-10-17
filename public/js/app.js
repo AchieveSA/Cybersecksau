@@ -155,7 +155,7 @@ export function chrome({ header = true } = {}) {
     const top = h('header', { class: 'top' },
       h('a', { href: '/', 'aria-label': 'الرئيسية' }, h('img', { class: 'ksau', src: '/assets/brand/logo_ksau.png', alt: 'جامعة الملك سعود بن عبدالعزيز للعلوم الصحية', width: 114, height: 40 })),
       h('div', { class: 'lockup', 'aria-label': 'نادي الأمن السيبراني بالشراكة مع نادي بصيرة' },
-        h('img', { class: 'mark', src: '/assets/brand/cyber_mark_keyed.png', alt: '', width: 34, height: 34 }),
+        h('img', { class: 'mark', src: '/assets/brand/cyber_mark.png', alt: '', width: 47, height: 34 }),
         h('span', { class: 'x', text: '×' }),
         h('span', { class: 'pill' }, h('img', { src: '/assets/brand/logo_baseerah.png', alt: '', width: 49, height: 26 }))))
     document.body.prepend(top)

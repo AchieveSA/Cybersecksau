@@ -1,6 +1,6 @@
 // Club-style QR (ref_qr_poster.png): gradient modules on white, the club mark in the centre. Error correction H so the
 // centre badge never breaks scanning. Needs /js/vendor/qrcode.js loaded first (window.qrcode).
-export function qrSvg(text, { size = 600, mark = '/assets/brand/cyber_mark_keyed.png' } = {}) {
+export function qrSvg(text, { size = 600, mark = '/assets/brand/cyber_mark.png' } = {}) {
   const q = window.qrcode(0, 'H')
   q.addData(text)
   q.make()

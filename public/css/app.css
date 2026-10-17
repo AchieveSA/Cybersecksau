@@ -47,6 +47,7 @@ a{color:var(--cyan)}
 .top .ksau{height:40px;width:auto}
 .lockup{display:flex;align-items:center;gap:8px;direction:ltr}
 .lockup .mark{height:34px;width:auto}
+.hero-logo{display:block;height:112px;width:auto;margin:4px auto 10px;filter:drop-shadow(0 8px 24px rgba(20,10,80,.45))}
 .lockup .x{font-family:"Inter";font-weight:800;color:var(--mint);font-size:15px}
 .pill{background:rgba(255,255,255,.92);border-radius:12px;padding:4px 10px;box-shadow:0 8px 24px rgba(20,10,80,.25);display:flex;align-items:center}
 .pill img{height:26px;width:auto}
