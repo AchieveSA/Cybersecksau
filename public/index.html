@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1c7a">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/icon-192.png">
+<link rel="preload" href="/fonts/cairo-arabic-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/app.css">
+<title>معرض الابتكار المفتوح · الألعاب الأمنية</title>
+<meta name="description" content="زاوية الأمن السيبراني والألعاب المصغّرة في معرض الابتكار المفتوح: ثلاث ألعاب أمنية سريعة ولوحة متصدّرين.">
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow"><b>نادي الأمن السيبراني</b><span class="x">×</span><b>نادي بصيرة</b></p>
+  <h1 style="margin-top:10px"><span class="g" data-t="معرض الابتكار">معرض الابتكار</span><br>المفتوح</h1>
+  <p class="tag" style="margin-top:6px">AI &amp; STARTUP OPEN EXPO</p>
+  <p class="lead">ثلاث ألعاب أمنية سريعة. سجّل مرة واحدة، والعب <span class="accent">بأي ترتيب</span></p>
+  <div class="btns"><a class="btn" id="cta" href="/join">سجّل والعب</a></div>
+  <div class="games" id="games"></div>
+  <p class="center" style="margin-top:22px"><span class="cta-pill">جوائز للمتصدّرين في كل فترة · لوحة متصدّرين واحدة</span></p>
+  <section class="stations" aria-label="محطات المعرض">
+    <div class="station panel here"><span id="st1"></span>زاوية الأمن السيبراني والألعاب المصغّرة<span class="en">MINI-GAMES</span></div>
+    <div class="station panel"><span id="st2"></span>محطة البناء المباشر وPRD<span class="en">LIVE BUILD</span></div>
+    <div class="station panel"><span id="st3"></span>المنصة المفتوحة للعروض<span class="en">OPEN DEMO</span></div>
+  </section>
+  <p class="motto">لأن الفكرة التي في رأسك تستحق أن تُبنى 🔐</p>
+</main>
+<script type="module">
+import { $, h, icon, api, auth, chrome, GAMES, ORDER, beat } from '/js/app.js'
+chrome()
+$('#st1').replaceWith(icon('shield')); $('#st2').replaceWith(icon('zap')); $('#st3').replaceWith(icon('mic'))
+const games = $('#games')
+function tiles(unlocked, best = {}) {
+  games.replaceChildren(...ORDER.map((k) => {
+    const g = GAMES[k]
+    return h(unlocked ? 'a' : 'div', { class: 'game tile' + (unlocked ? '' : ' locked'), href: unlocked ? '/play/' + k : null, 'aria-disabled': unlocked ? null : 'true' },
+      h('span', { class: 'ic', style: 'color:' + g.color }, icon(g.icon)),
+      h('span', {}, h('span', { class: 't', text: g.t }), h('span', { class: 'en', text: g.en }), h('span', { class: 's', text: g.s })),
+      unlocked && best[k] != null ? h('span', { class: 'meta' }, h('b', { text: best[k] }), h('small', { text: 'أفضل نتيجة' })) : null)
+  }))
+}
+tiles(false)
+setTimeout(() => beat($('h1 .g')), 500)
+if (auth.get()) {
+  api('GET', '/api/me', null, { retry: false }).then((me) => {
+    tiles(true, me.best)
+    $('#cta').textContent = 'تابع اللعب'
+    $('#cta').href = '/play'
+  }).catch(() => {})
+} else {
+  api('GET', '/api/status', null, { retry: false }).then((s) => { if (s.session) $('#cta').href = '/join?s=' + encodeURIComponent(s.session.id) }).catch(() => {})
+}
+</script>
+</body>
+</html>
