@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1c7a">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/icon-192.png">
+<link rel="preload" href="/fonts/cairo-arabic-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/app.css">
+<title>اختر لعبتك · معرض الابتكار المفتوح</title>
+</head>
+<body>
+<main class="wrap">
+  <p class="tag">STATION 01 · MINI-GAMES</p>
+  <h2 style="margin-top:6px">اختر <span class="g" data-t="لعبتك">لعبتك</span></h2>
+  <p class="center muted hello" id="hello"></p>
+  <div class="rankbar panel">
+    <div><small>الترتيب</small><span class="big num" id="rank">—</span></div>
+    <div class="center" id="ranktxt" style="font-weight:700"></div>
+    <div style="text-align:left"><small>المجموع</small><span class="big num" id="total" style="color:var(--mint)">0</span></div>
+  </div>
+  <div class="games" id="games"></div>
+  <p class="center muted" id="frozen" style="margin-top:16px"></p>
+  <div class="btns two" style="margin-top:22px">
+    <a class="btn ghost sm" id="board" href="/board" style="width:100%">لوحة المتصدّرين</a>
+    <a class="btn ghost sm" id="survey" href="/survey" style="width:100%">قيّم تجربتك</a>
+  </div>
+</main>
+<script type="module">
+import { $, h, icon, api, chrome, GAMES, ORDER, beat, toast, needPlayer, iso } from '/js/app.js'
+chrome()
+const w = sessionStorage.getItem('welcome'); if (w) { toast(w); sessionStorage.removeItem('welcome') }
+async function load() {
+  let me
+  try { me = await api('GET', '/api/me') } catch (e) { if (!needPlayer(e)) toast(e.message, { warn: true }); return }
+  $('#hello').textContent = 'أهلًا ' + me.name.split(' ')[0] + ' · ' + iso(me.session.label)
+  $('#rank').textContent = me.total ? '#' + me.rank : '—'
+  $('#ranktxt').textContent = me.total ? 'ترتيبك الآن #' + me.rank + ' من ' + me.count : 'العب لتدخل اللوحة'
+  $('#total').textContent = me.total
+  $('#board').href = '/board?s=' + me.session.id
+  $('#survey').href = '/survey?s=' + me.session.id
+  if (me.session.state === 'frozen') $('#frozen').textContent = 'تم إعلان الفائزين لهذه الفترة، ويمكنك متابعة اللعب للتسلية'
+  $('#games').replaceChildren(...ORDER.map((k) => {
+    const g = GAMES[k], b = me.best[k]
+    return h('a', { class: 'game tile', href: '/play/' + k },
+      h('span', { class: 'ic', style: 'color:' + g.color }, icon(g.icon)),
+      h('span', {}, h('span', { class: 't', text: g.t }), h('span', { class: 'en', text: g.en }), h('span', { class: 's', text: g.s })),
+      h('span', { class: 'meta' }, b == null ? h('small', { text: 'لم تلعبها بعد' }) : [h('b', { class: 'num', text: b }), h('small', { text: 'أفضل نتيجة' })]))
+  }))
+  beat($('h2 .g'), { sliver: false })
+}
+load()
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1c7a">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/icon-192.png">
+<link rel="preload" href="/fonts/cairo-arabic-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/app.css">
+<title>قيّم تجربتك · معرض الابتكار المفتوح</title>
+</head>
+<body>
+<main class="wrap">
+  <p class="tag">AI &amp; STARTUP OPEN EXPO</p>
+  <h2 style="margin-top:6px">ثلاثة أسئلة <span class="accent">قبل أن تغادر</span></h2>
+  <form id="f" novalidate>
+    <div class="qs"><h3>1. ما أكثر محطة أفادتك؟</h3>
+      <div class="seg" data-q="q1">
+        <button type="button" data-v="games">زاوية الأمن السيبراني والألعاب المصغّرة</button>
+        <button type="button" data-v="build">محطة البناء المباشر وPRD</button>
+        <button type="button" data-v="demo">المنصة المفتوحة للعروض</button>
+      </div></div>
+    <div class="qs"><h3>2. تقييمك العام من 5</h3>
+      <div class="seg row" data-q="q2"><button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button></div></div>
+    <div class="qs"><h3>3. هل تريد أن نرسل لك المواد والروابط؟</h3>
+      <div class="seg" data-q="q3" style="grid-template-columns:1fr 1fr"><button type="button" data-v="yes">نعم</button><button type="button" data-v="no">لا، شكرًا</button></div>
+      <label class="field hide" id="ph"><span>رقم الجوال (اختياري)</span><input name="phone" type="tel" inputmode="tel" placeholder="05xxxxxxxx" maxlength="16"></label></div>
+    <p class="err" id="err" role="alert"></p>
+    <button class="btn" id="go" type="submit">إرسال</button>
+  </form>
+  <div id="done" class="hide center" style="margin-top:30px">
+    <h2><span class="g" data-t="شكرًا لك">شكرًا لك</span></h2>
+    <p class="lead">لأن الفكرة التي في رأسك تستحق أن تُبنى 🔐</p>
+  </div>
+</main>
+<script type="module">
+import { $, $$, api, auth, chrome, qs, beat } from '/js/app.js'
+chrome()
+const ans = {}
+$$('.seg').forEach((seg) => seg.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return
+  ans[seg.dataset.q] = b.dataset.v
+  seg.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b))
+  if (seg.dataset.q === 'q3') $('#ph').classList.toggle('hide', b.dataset.v !== 'yes')
+}))
+let sid = qs.get('s') || auth.session()
+if (localStorage.getItem('survey-' + sid)) { $('#f').classList.add('hide'); $('#done').classList.remove('hide') }
+$('#f').addEventListener('submit', async (e) => {
+  e.preventDefault()
+  $('#err').textContent = ''
+  if (!ans.q1 || !ans.q2) return ($('#err').textContent = 'أجب عن السؤالين الأول والثاني')
+  try {
+    if (!sid) sid = (await api('GET', '/api/status')).session?.id || 'f1'
+    await api('POST', '/api/survey', { s: sid, q1: ans.q1, q2: +ans.q2, q3: ans.q3 === 'yes', phone: $('#f').phone.value || null })
+    try { localStorage.setItem('survey-' + sid, '1') } catch {}
+    $('#f').classList.add('hide'); $('#done').classList.remove('hide'); beat($('#done .g'))
+  } catch (e2) { $('#err').textContent = e2.message }
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1c7a">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/icon-192.png">
+<link rel="preload" href="/fonts/cairo-arabic-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/app.css">
+<title>لوحة المتصدّرين · معرض الابتكار المفتوح</title>
+<style>
+  body{height:100dvh;overflow:hidden}
+  .tv{flex:1;display:grid;grid-template-columns:1fr minmax(240px,21vw);gap:2.2vw;padding:1.4vw 3vw 1.2vw;min-height:0}
+  .tv-head{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:2vw}
+  .tv-head .ksau{height:4.2vw;min-height:40px;width:auto}
+  .tv-head .lockup .mark{height:3.4vw;min-height:32px}
+  .tv-head .pill img{height:2.6vw;min-height:24px}
+  .tv-head h1{font-size:clamp(34px,4.4vw,92px);line-height:1.15}
+  .tv-head .sub{display:flex;justify-content:center;gap:1.4vw;align-items:center;margin-top:.3vw;font-weight:600;font-size:clamp(14px,1.25vw,26px);color:var(--lav)}
+  .live{display:inline-flex;align-items:center;gap:.6vw;color:#fff;font-weight:700}
+  .live i{width:.8vw;height:.8vw;min-width:10px;min-height:10px;border-radius:50%;background:#ff4f6d;box-shadow:0 0 0 0 rgba(255,79,109,.6);animation:pulse 1.6s infinite}
+  .live.frozen i{background:var(--gold);animation:none}
+  @keyframes pulse{70%{box-shadow:0 0 0 .8vw rgba(255,79,109,0)}100%{box-shadow:0 0 0 0 rgba(255,79,109,0)}}
+  .rows{display:grid;grid-auto-rows:1fr;gap:.7vw;min-height:0}
+  .row{display:grid;grid-template-columns:4.2vw 1.25fr 2fr 8vw;align-items:center;gap:1.4vw;padding:0 1.6vw;border-radius:1.4vw;background:rgba(12,8,50,.5);border:1.5px solid rgba(207,198,255,.3);min-height:0}
+  .row.r1{border-color:var(--gold);background:linear-gradient(90deg,rgba(255,213,107,.16),rgba(12,8,50,.5))}
+  .row.r2{border-color:var(--silver)}.row.r3{border-color:var(--bronze)}
+  .badge{width:3.2vw;height:3.2vw;min-width:34px;min-height:34px;border-radius:50%;display:grid;place-items:center;font-family:"Inter";font-weight:800;font-size:clamp(14px,1.5vw,30px);background:rgba(255,255,255,.12);color:#fff}
+  .r1 .badge{background:var(--gold);color:#3a2600}.r2 .badge{background:var(--silver);color:#22243a}.r3 .badge{background:var(--bronze);color:#3a1a08}
+  .nm{font-weight:700;font-size:clamp(16px,1.9vw,40px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bars{display:grid;grid-template-columns:repeat(3,1fr);gap:1vw}
+  .bar small{display:flex;justify-content:space-between;font-size:clamp(10px,.8vw,17px);color:var(--lav);font-weight:600}
+  .bar small b{font-family:"Inter";color:#fff}
+  .bar span{display:block;height:.55vw;min-height:5px;border-radius:1vw;background:rgba(255,255,255,.12);overflow:hidden;margin-top:.25vw}
+  .bar span i{display:block;height:100%;border-radius:1vw}
+  .tot{font-family:"Inter";font-weight:800;font-size:clamp(20px,2.4vw,52px);color:var(--mint);text-align:left}
+  .side{display:flex;flex-direction:column;justify-content:flex-end;gap:1vw;min-height:0}
+  .qrcard{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.55);border-radius:2vw;padding:1vw;backdrop-filter:blur(8px)}
+  .qrcard .qr{background:#fff;border-radius:1.4vw;padding:.8vw}
+  .qrcard .qr svg{display:block;width:100%;height:auto}
+  .qrcard p{text-align:center;font-weight:700;font-size:clamp(14px,1.3vw,28px);margin-top:.6vw}
+  .qrcard .en{display:block;text-align:center;font-weight:700;font-size:clamp(11px,.95vw,20px);color:var(--mint);letter-spacing:.04em}
+  .legend{display:grid;gap:.4vw;font-size:clamp(11px,.9vw,18px);color:var(--lav);font-weight:600}
+  .legend span{display:flex;align-items:center;gap:.5vw}.legend i{width:1.6vw;height:.5vw;border-radius:1vw}
+  .empty{display:grid;place-items:center;text-align:center;font-weight:700;font-size:clamp(18px,2vw,40px);color:var(--lav)}
+  .band.tv-band{flex:none;max-height:9vh;aspect-ratio:auto;height:9vh}
+  .reveal{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6vw;
+    background:radial-gradient(60vw 40vw at 50% 30%,rgba(106,90,224,.55),rgba(18,11,58,0) 70%),#120b3a}
+  .reveal h1{font-size:clamp(48px,7vw,150px)}
+  .podium{display:grid;gap:1.2vw;width:min(70vw,1200px)}
+  .pod{display:grid;grid-template-columns:6vw 1fr auto;align-items:center;gap:2vw;padding:1.4vw 2.4vw;border-radius:2vw;background:var(--glass);border:1.5px solid var(--glass-line);
+    box-shadow:var(--shadow);opacity:0;transform:translateY(20px);transition:opacity .4s,transform .4s}
+  .pod.on{opacity:1;transform:none}
+  .pod .badge{width:5vw;height:5vw;font-size:clamp(20px,2.4vw,48px)}
+  .pod .nm{font-size:clamp(24px,3.4vw,72px)}
+  .pod .tot{font-size:clamp(24px,3vw,64px)}
+  .pod.p1{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,213,107,.5),var(--shadow)}
+  .reveal .gift{font-weight:700;font-size:clamp(16px,1.8vw,38px);color:var(--mint)}
+  .hit-board{animation:shake .3s steps(4) 2 both}
+  @media (max-width:800px){
+    body{height:auto;overflow:auto}
+    .tv{grid-template-columns:1fr;padding:12px 16px}
+    .tv-head{grid-template-columns:1fr}
+    .tv-head .ksau,.tv-head .lockup{display:none}
+    .row{grid-template-columns:40px 1fr auto;padding:10px 12px;border-radius:16px;gap:10px}
+    .bars{display:none}.side{display:none}.rows{grid-auto-rows:auto;gap:8px}
+    .band.tv-band{height:auto;max-height:none;aspect-ratio:2400/311}
+    .podium{width:calc(100vw - 32px)}.pod{grid-template-columns:48px 1fr auto;padding:14px}.pod .badge{width:44px;height:44px}
+  }
+</style>
+</head>
+<body>
+<section class="tv" id="tv">
+  <header class="tv-head">
+    <img class="ksau" src="/assets/brand/logo_ksau.png" alt="جامعة الملك سعود بن عبدالعزيز للعلوم الصحية">
+    <div class="center">
+      <p class="tag">STATION 01 · CYBER SECURITY &amp; MINI-GAMES</p>
+      <h1><span class="g" data-t="لوحة المتصدّرين" id="title">لوحة المتصدّرين</span></h1>
+      <div class="sub"><span id="slabel"></span><span class="live" id="live"><i></i><span id="livetxt">مباشر</span></span></div>
+    </div>
+    <div class="lockup"><img class="mark" src="/assets/brand/cyber_mark_keyed.png" alt=""><span class="x">×</span><span class="pill"><img src="/assets/brand/logo_baseerah.png" alt="نادي بصيرة"></span></div>
+  </header>
+  <div class="rows" id="rows"></div>
+  <aside class="side">
+    <div class="legend" id="legend"></div>
+    <div class="qrcard"><div class="qr" id="qr"></div><p>امسح والعب</p><span class="en" id="short"></span></div>
+  </aside>
+</section>
+<script src="/js/vendor/qrcode.js"></script>
+<script type="module" src="/js/board.js"></script>
+</body>
+</html>

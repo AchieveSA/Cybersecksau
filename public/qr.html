@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1c7a">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/icon-192.png">
+<link rel="preload" href="/fonts/cairo-arabic-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/app.css">
+<meta name="robots" content="noindex">
+<title>رمز QR · معرض الابتكار المفتوح</title>
+<style>
+  @page{size:A5;margin:0}
+  html,body{background:#120b3a}
+  body{min-height:100vh;align-items:center;justify-content:center;padding:0}
+  .poster{position:relative;width:148mm;height:210mm;overflow:hidden;display:flex;flex-direction:column;align-items:center;margin:auto;
+    background:radial-gradient(120mm 80mm at 15% 0%,rgba(207,198,255,.6),transparent 60%),radial-gradient(100mm 100mm at 100% 45%,rgba(94,231,255,.18),transparent 60%),
+    radial-gradient(100mm 80mm at 0% 85%,rgba(255,79,216,.16),transparent 60%),linear-gradient(180deg,#4a3bb5 0%,#2a1c7a 34%,#1a1158 64%,#120b3a 100%)}
+  .poster::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.03) 0 1px,transparent 1px 4px);pointer-events:none}
+  .ph{width:100%;display:flex;justify-content:space-between;align-items:center;padding:8mm 9mm 0}
+  .ph .ksau{height:11mm;width:auto}.ph .lockup .mark{height:9mm;width:auto}.ph .pill img{height:7mm;width:auto}
+  .pt{font-family:"Cairo";font-weight:900;font-size:15mm;line-height:1.2;text-align:center;margin-top:7mm;color:#fff;
+    text-shadow:-.6mm 0 0 rgba(94,231,255,.55),.6mm 0 0 rgba(255,79,216,.5),0 1mm 0 rgba(34,22,110,.45)}
+  .ps{font-family:"Plex";font-weight:700;font-size:5.4mm;text-align:center;margin-top:1.5mm}
+  .tag{font-size:3mm;margin-top:2mm}
+  .frame{margin-top:6mm;padding:4mm;border-radius:8mm;background:rgba(255,255,255,.14);border:.5mm solid rgba(207,198,255,.6)}
+  .qr{width:92mm;background:#fff;border-radius:6mm;padding:4mm}
+  .qr svg{display:block;width:100%;height:auto}
+  .url{font-family:"Inter";font-weight:700;font-size:4.4mm;color:var(--mint);margin-top:4mm;direction:ltr}
+  .pf{position:absolute;left:0;right:0;bottom:0;height:19mm;background:url("/assets/brand/footer_band.jpg") center/cover}
+  @media print{.noprint{display:none}}
+  .noprint{position:fixed;top:12px;left:12px;width:auto;z-index:5}
+</style>
+</head>
+<body>
+<button class="btn sm noprint" onclick="print()">طباعة</button>
+<div class="poster">
+  <div class="ph">
+    <img class="ksau" src="/assets/brand/logo_ksau.png" alt="">
+    <div class="lockup"><img class="mark" src="/assets/brand/cyber_mark_keyed.png" alt=""><span class="x">×</span><span class="pill"><img src="/assets/brand/logo_baseerah.png" alt=""></span></div>
+  </div>
+  <div class="pt" id="pt">امسح والعب</div>
+  <div class="ps" id="ps">ثلاث ألعاب أمنية · لوحة متصدّرين واحدة</div>
+  <p class="tag" id="ptag">STATION 01 · CYBER SECURITY &amp; MINI-GAMES</p>
+  <div class="frame"><div class="qr" id="qr"></div></div>
+  <div class="url" id="url"></div>
+  <div class="pf"></div>
+</div>
+<script src="/js/vendor/qrcode.js"></script>
+<script type="module">
+import { $, qs } from '/js/app.js'
+import { qrSvg } from '/js/qr.js'
+// ?s=f1 → registration QR for that session · ?t=survey → exit survey · ?base= overrides the domain (used when exporting PNGs)
+const base = (qs.get('base') || location.origin).replace(/\/$/, '')
+const s = qs.get('s') || 'f1'
+const survey = qs.get('t') === 'survey'
+const url = survey ? base + '/survey' : base + '/join?s=' + s
+const short = survey ? base + '/survey' : ['f1', 'm1'].includes(s) ? base + '/' + s : url
+if (survey) { $('#pt').textContent = 'قيّم تجربتك'; $('#ps').textContent = 'ثلاثة أسئلة قبل أن تغادر'; $('#ptag').textContent = 'AI & STARTUP OPEN EXPO · SURVEY' }
+else if (qs.get('label')) $('#ps').textContent = qs.get('label')
+$('#qr').innerHTML = qrSvg(url)
+$('#url').textContent = short.replace(/^https?:\/\//, '')
+</script>
+</body>
+</html>

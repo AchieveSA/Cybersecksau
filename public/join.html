@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1c7a">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/icon-192.png">
+<link rel="preload" href="/fonts/cairo-arabic-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/app.css">
+<title>سجّل والعب · معرض الابتكار المفتوح</title>
+</head>
+<body>
+<main class="wrap">
+  <p class="tag">STATION 01 · MINI-GAMES</p>
+  <h2 style="margin-top:8px">سجّل عشان تدخل <span class="accent">لوحة المتصدّرين</span></h2>
+  <p class="center muted" id="slabel" style="margin-top:6px"></p>
+  <form id="f" class="panel" style="padding:4px 18px 20px;margin-top:18px" novalidate>
+    <label class="field"><span>الاسم</span><input name="name" autocomplete="name" maxlength="40" required></label>
+    <label class="field"><span>رقم الجوال (للتواصل مع الفائزين فقط)</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05xxxxxxxx" maxlength="16" required></label>
+    <label class="field"><span>الكلية / السنة (اختياري)</span><input name="college" maxlength="60"></label>
+    <label class="check"><input type="checkbox" name="consent"> <span>أوافق على حفظ رقمي حتى إعلان الفائزين وحذفه بعد الفعالية بأسبوع</span></label>
+    <p class="err" id="err" role="alert"></p>
+    <button class="btn" id="go" type="submit">ابدأ</button>
+  </form>
+  <p class="center muted" style="margin-top:14px">لن يظهر رقمك على اللوحة، فقط اسمك الأول والحرف الأول من اسم العائلة.</p>
+</main>
+<script type="module">
+import { $, api, auth, chrome, qs, toast, iso } from '/js/app.js'
+chrome()
+const f = $('#f'), err = $('#err')
+let sid = qs.get('s')
+async function load() {
+  try {
+    const st = await api('GET', '/api/status' + (sid ? '?s=' + encodeURIComponent(sid) : ''), null, { retry: false })
+    if (!st.session) { block('لم تبدأ الفترة بعد، عُد بعد قليل'); return }
+    sid = st.session.id
+    $('#slabel').textContent = iso(st.session.label)
+    if (st.session.state === 'draft') block('لم تبدأ هذه الفترة بعد، عُد بعد قليل')
+    else if (st.session.state === 'closed') block('انتهت هذه الفترة. شكرًا لمشاركتك')
+    else if (auth.session() === sid) location.replace('/play')
+  } catch (e) { err.textContent = e.message }
+}
+function block(msg) { err.textContent = msg; $('#go').disabled = true }
+f.addEventListener('submit', async (e) => {
+  e.preventDefault()
+  err.textContent = ''
+  const d = Object.fromEntries(new FormData(f))
+  const phone = (d.phone || '').replace(/[٠-٩]/g, (c) => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[^0-9+]/g, '')
+  if ((d.name || '').trim().length < 2) return (err.textContent = 'اكتب اسمك')
+  if (!/^(05\d{8}|\+?9665\d{8}|5\d{8})$/.test(phone)) return (err.textContent = 'أدخل رقمًا سعوديًا يبدأ بـ 05')
+  if (!f.consent.checked) return (err.textContent = 'نحتاج موافقتك لنتواصل معك إن فزت')
+  $('#go').disabled = true
+  try {
+    const r = await api('POST', '/api/join', { s: sid, name: d.name, phone, college: d.college, consent: true })
+    auth.set(r.token)
+    if (r.existed) sessionStorage.setItem('welcome', 'أهلًا بعودتك، نكمل من حيث توقفت')
+    location.replace('/play')
+  } catch (e2) { err.textContent = e2.message; $('#go').disabled = false }
+})
+load()
+</script>
+</body>
+</html>

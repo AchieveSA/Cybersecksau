@@ -1,8 +1,61 @@
 [build]
-  publish = "."
+  publish = "public"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Pretty routes from 04_platform-spec.md, served by the static pages.
+[[redirects]]
+  from = "/join"
+  to = "/join.html"
+  status = 200
+[[redirects]]
+  from = "/play"
+  to = "/play.html"
+  status = 200
+[[redirects]]
+  from = "/play/*"
+  to = "/game.html"
+  status = 200
+[[redirects]]
+  from = "/result/*"
+  to = "/result.html"
+  status = 200
+[[redirects]]
+  from = "/board"
+  to = "/board.html"
+  status = 200
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+[[redirects]]
+  from = "/qr"
+  to = "/qr.html"
+  status = 200
+[[redirects]]
+  from = "/survey"
+  to = "/survey.html"
+  status = 200
+# Short fallback URLs printed under the QR codes.
+[[redirects]]
+  from = "/f1"
+  to = "/join?s=f1"
+  status = 302
+[[redirects]]
+  from = "/m1"
+  to = "/join?s=m1"
+  status = 302
 
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "same-origin"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
