@@ -22,7 +22,7 @@
   .poster::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.03) 0 1px,transparent 1px 4px);pointer-events:none}
   .ph{width:100%;display:flex;justify-content:space-between;align-items:center;padding:8mm 9mm 0}
   .ph .ksau{height:11mm;width:auto}.ph .lockup .clogo{height:17mm;width:auto}.ph .pill img{height:7mm;width:auto}
-  .pt{font-family:"Cairo";font-weight:900;font-size:13mm;line-height:1.2;text-align:center;margin-top:4mm;color:#fff;
+  .pt{font-family:"Cairo","Inter";font-weight:900;font-size:13mm;line-height:1.2;text-align:center;margin-top:4mm;color:#fff;
     text-shadow:-.6mm 0 0 rgba(94,231,255,.55),.6mm 0 0 rgba(255,79,216,.5),0 1mm 0 rgba(34,22,110,.45)}
   .ps{font-family:"Plex","Inter";font-weight:700;font-size:5.4mm;text-align:center;margin-top:1.5mm}
   .tag{font-size:3mm;margin-top:2mm}
@@ -33,10 +33,12 @@
   .steps{display:flex;gap:3mm;margin-top:4.5mm;direction:rtl}
   .step{width:36mm;padding:3mm 2mm;border-radius:5mm;background:rgba(12,8,50,.5);border:.4mm solid rgba(207,198,255,.45);text-align:center}
   .step b{display:grid;place-items:center;width:7mm;height:7mm;margin:0 auto 1.5mm;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--mint));color:#120b3a;font-family:"Inter";font-weight:800;font-size:3.6mm}
-  .step span{display:block;font-family:"Plex";font-weight:700;font-size:4mm;line-height:1.3}
-  .step small{display:block;font-family:"Plex";font-weight:500;font-size:2.8mm;color:var(--lav);margin-top:.6mm}
+  .step span{display:block;font-family:"Plex","Inter";font-weight:700;font-size:4mm;line-height:1.3}
+  .step small{display:block;font-family:"Plex","Inter";font-weight:500;font-size:2.8mm;color:var(--lav);margin-top:.6mm}
   .prize{margin-top:4mm;padding:1.6mm 5mm;border-radius:10mm;border:.4mm solid rgba(141,242,204,.7);background:rgba(141,242,204,.12);font-family:"Plex";font-weight:600;font-size:3.4mm}
   .motto{margin-top:auto;padding-bottom:6mm;text-align:center;font-family:"Plex";font-weight:600;font-size:3.2mm;color:var(--lav)}
+  .prompt{margin-top:4mm;max-width:118mm;padding:2.4mm 4.5mm;border-radius:4mm;border:.4mm dashed rgba(94,231,255,.7);background:rgba(12,8,50,.5);font-family:"Plex","Inter";font-weight:600;font-size:3.3mm;line-height:1.6;text-align:center}
+  .pt .tool{font-family:"Inter";font-weight:800;color:var(--mint)}
   @media print{.noprint{display:none}}
   .noprint{position:fixed;top:12px;left:12px;width:auto;z-index:5}
 </style>
@@ -65,15 +67,34 @@
 <script type="module">
 import { $, qs, iso } from '/js/app.js'
 import { qrSvg } from '/js/qr.js'
-// ?s=f1 → registration QR for that session · ?t=survey → exit survey · ?base= overrides the domain (used when exporting PNGs)
+// ?s=f1 → registration QR for that session · ?t=survey → exit survey · ?t=lovable|claude|base44 → AI tools at the
+// Live Build station · ?base= overrides the domain (used when exporting PNGs)
 const base = (qs.get('base') || location.origin).replace(/\/$/, '')
 const s = qs.get('s') || 'f1'
-const survey = qs.get('t') === 'survey'
-const url = survey ? base + '/survey' : base + '/join?s=' + s
-const short = survey ? base + '/survey' : ['f1', 'm1'].includes(s) ? base + '/' + s : url
-if (survey) { $('#steps').remove(); $('#prize').textContent = 'شكرًا لزيارتكم معرض الابتكار المفتوح 💡'; $('#motto').textContent = 'لأن الفكرة التي في رأسك تستحق أن تُبنى'; $('#pt').textContent = 'قيّم تجربتك'; $('#ps').textContent = 'ثلاثة أسئلة قبل أن تغادر'; $('#ptag').textContent = 'AI & STARTUP OPEN EXPO · SURVEY' }
-else if (qs.get('label')) $('#ps').textContent = iso(qs.get('label'))
-if (qs.get('base')) document.querySelector('.noprint').remove() // PNG export
+const t = qs.get('t')
+const TOOLS = {
+  lovable: { name: 'Lovable', url: 'https://lovable.dev', sub: 'من الفكرة إلى تطبيق يعمل… بالكتابة فقط' },
+  claude: { name: 'Claude', url: 'https://claude.ai', sub: 'اكتب الـ PRD والـ Prompt مع مساعد ذكي' },
+  base44: { name: 'Base44', url: 'https://base44.com', sub: 'ابنِ تطبيقك كاملًا بلا برمجة' },
+}
+const tool = TOOLS[t]
+let url = base + '/join?s=' + s
+let short = ['f1', 'm1'].includes(s) ? base + '/' + s : url
+if (t === 'survey') {
+  url = short = base + '/survey'
+  $('#steps').remove(); $('#prize').textContent = 'شكرًا لزيارتكم معرض الابتكار المفتوح 💡'; $('#motto').textContent = 'لأن الفكرة التي في رأسك تستحق أن تُبنى'
+  $('#pt').textContent = 'قيّم تجربتك'; $('#ps').textContent = 'ثلاثة أسئلة قبل أن تغادر'; $('#ptag').textContent = 'AI & STARTUP OPEN EXPO · SURVEY'
+} else if (tool) {
+  url = short = tool.url
+  $('#pt').replaceChildren('جرّب ', Object.assign(document.createElement('span'), { className: 'tool', textContent: tool.name }))
+  $('#ps').textContent = iso(tool.sub)
+  $('#ptag').textContent = 'STATION 02 · LIVE BUILD & PRD'
+  const steps = [['امسح الرمز', 'وافتح الموقع'], ['اكتب فكرتك', 'بقالب الـ Prompt'], ['شاهدها تُبنى', 'في دقائق']]
+  $('#steps').querySelectorAll('.step').forEach((el, i) => { el.querySelector('span').textContent = steps[i][0]; el.querySelector('small').textContent = iso(steps[i][1]) })
+  $('#prize').className = 'prompt'
+  $('#prize').textContent = '«ابنِ تطبيقًا لـ[المستخدم] يساعده على [المشكلة]، يحتوي على [الميزات الثلاث]، وشاشته الأولى [الوصف]»'
+  $('#motto').remove()
+} else if (qs.get('label')) $('#ps').textContent = iso(qs.get('label'))
 $('#qr').innerHTML = qrSvg(url)
 $('#url').textContent = short.replace(/^https?:\/\//, '')
 </script>
