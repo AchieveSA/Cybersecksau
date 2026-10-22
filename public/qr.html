@@ -94,7 +94,10 @@ if (t === 'survey') {
   $('#prize').className = 'prompt'
   $('#prize').textContent = '«ابنِ تطبيقًا لـ[المستخدم] يساعده على [المشكلة]، يحتوي على [الميزات الثلاث]، وشاشته الأولى [الوصف]»'
   $('#motto').remove()
-} else if (qs.get('label')) $('#ps').textContent = iso(qs.get('label'))
+} else {
+  $('#prize').remove()
+  if (qs.get('label')) $('#ps').textContent = iso(qs.get('label'))
+}
 $('#qr').innerHTML = qrSvg(url)
 $('#url').textContent = short.replace(/^https?:\/\//, '')
 </script>
