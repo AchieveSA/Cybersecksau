@@ -63,11 +63,10 @@ body{
 .kpi.hero{border-color:rgba(56,217,255,.45);box-shadow:0 0 30px rgba(56,217,255,.14),0 10px 40px rgba(2,3,20,.45)}
 .kpi.hero .val{font-size:64px;color:#fff;text-shadow:0 0 22px rgba(56,217,255,.55)}
 
-.row2{grid-template-columns:1.35fr 1fr}
+.row2{grid-template-columns:1fr 1fr}
 
 /* per-game rows */
-.game{display:flex;align-items:center;gap:14px;padding:16px 0}
-.game+.game{border-top:1px solid rgba(170,176,230,.12)}
+.game{display:flex;align-items:center;gap:14px;padding:4px 0 10px}
 .game .ic{font-size:34px;filter:drop-shadow(0 0 10px rgba(124,92,255,.6))}
 .game h4{font-size:20px;font-weight:900;line-height:1.2}
 .game .en{font-size:11px;letter-spacing:3px;color:var(--faint);font-weight:700}
@@ -78,7 +77,6 @@ body{
 .prog{height:8px;border-radius:4px;background:rgba(170,176,230,.12);margin-top:8px;overflow:hidden}
 .prog i{display:block;height:100%;border-radius:4px;background:linear-gradient(270deg,var(--violet),var(--cyan))}
 
-svg text{font-family:'Cairo',sans-serif}
 footer{position:relative;display:flex;justify-content:space-between;align-items:center;margin-top:22px;color:var(--faint);font-size:13px;font-weight:600}
 footer .tag{font-family:'Aref Ruqaa',serif;font-size:22px;color:#c9c4ff;text-shadow:0 0 14px rgba(124,92,255,.5)}
 </style>
@@ -123,33 +121,31 @@ footer .tag{font-family:'Aref Ruqaa',serif;font-size:22px;color:#c9c4ff;text-sha
 
   <div class="grid row2">
     <div class="card">
-      <h3>⏰ اللاعبون حسب الساعة <span class="en">PLAYERS BY HOUR</span></h3>
-      <svg id="hours" width="100%" height="250" style="margin-top:8px"></svg>
-    </div>
-
-    <div class="card">
-      <h3>🎮 اللعبتان <span class="en">THE GAMES</span></h3>
       <div class="game">
         <span class="ic">🧠</span>
         <div><h4>اعرف عقلك</h4><div class="en">KNOW YOUR MIND</div></div>
         <div class="nums">
+          <div class="stat"><b class="num">91</b><span>لعبوها</span></div>
           <div class="stat"><b class="num">86</b><span>أكملوها</span></div>
           <div class="stat"><b class="num">1:48</b><span>متوسط المدة</span></div>
         </div>
       </div>
       <div class="prog"><i style="width:95%"></i></div>
-      <div style="color:var(--faint);font-size:12.5px;font-weight:700;margin-top:4px">نسبة الإكمال <b class="num" dir="ltr" style="color:var(--ink);unicode-bidi:isolate">95%</b></div>
+      <div style="color:var(--faint);font-size:12.5px;font-weight:700;margin-top:6px">نسبة الإكمال <b class="num" dir="ltr" style="color:var(--ink);unicode-bidi:isolate">95%</b></div>
+    </div>
 
-      <div class="game" style="margin-top:10px">
+    <div class="card">
+      <div class="game">
         <span class="ic">🔐</span>
         <div><h4>احمِ عقلك</h4><div class="en">PROTECT YOUR MIND</div></div>
         <div class="nums">
+          <div class="stat"><b class="num">72</b><span>لعبوها</span></div>
           <div class="stat"><b class="num">66</b><span>أكملوها</span></div>
           <div class="stat"><b class="num">3:36</b><span>متوسط المدة</span></div>
         </div>
       </div>
       <div class="prog"><i style="width:92%"></i></div>
-      <div style="color:var(--faint);font-size:12.5px;font-weight:700;margin-top:4px">نسبة الإكمال <b class="num" dir="ltr" style="color:var(--ink);unicode-bidi:isolate">92%</b></div>
+      <div style="color:var(--faint);font-size:12.5px;font-weight:700;margin-top:6px">نسبة الإكمال <b class="num" dir="ltr" style="color:var(--ink);unicode-bidi:isolate">92%</b></div>
     </div>
   </div>
 
@@ -159,25 +155,5 @@ footer .tag{font-family:'Aref Ruqaa',serif;font-size:22px;color:#c9c4ff;text-sha
   </footer>
 </div>
 
-<script>
-/* Players by first-visit hour (sums to 97) */
-const HOURS=[['8 ص',3],['9 ص',9],['10 ص',17],['11 ص',20],['12 م',14],['1 م',17],['2 م',12],['3 م',5]];
-(()=>{
-  const svg=document.querySelector('#hours'),W=svg.clientWidth,H=250,pad={t:26,b:30,l:8,r:30},max=25;
-  const iw=W-pad.l-pad.r,ih=H-pad.t-pad.b,slot=iw/HOURS.length,bw=Math.min(50,slot*.56);
-  const peak=Math.max(...HOURS.map(h=>h[1]));let g='';
-  [0,5,10,15,20,25].forEach(v=>{const y=pad.t+ih-ih*v/max;
-    g+=`<line x1="${pad.l}" x2="${W-pad.r}" y1="${y}" y2="${y}" stroke="rgba(170,176,230,${v?0.12:0.3})"/>`+
-       `<text x="${W-pad.r+8}" y="${y+4}" fill="#7d84bd" font-size="12" font-weight="600">${v}</text>`});
-  HOURS.forEach(([lab,v],i)=>{
-    const x=W-pad.r-slot*(i+.5)-bw/2,h=ih*v/max,y=pad.t+ih-h,r=4,pk=v===peak;
-    g+=`<path d="M${x},${pad.t+ih} V${y+r} Q${x},${y} ${x+r},${y} H${x+bw-r} Q${x+bw},${y} ${x+bw},${y+r} V${pad.t+ih} Z" fill="${pk?'url(#gpk)':'#8b6dff'}" ${pk?'filter="url(#glow)"':''}/>`;
-    g+=`<text x="${x+bw/2}" y="${y-8}" text-anchor="middle" fill="${pk?'#fff':'#c9ccf2'}" font-size="13.5" font-weight="800">${v}</text>`;
-    g+=`<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" fill="#aab0e6" font-size="13" font-weight="700">${lab}</text>`;
-  });
-  svg.innerHTML=`<defs><linearGradient id="gpk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#38d9ff"/></linearGradient>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`+g;
-})();
-</script>
 </body>
 </html>
