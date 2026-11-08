@@ -37,6 +37,39 @@
   .winner .badge{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:"Inter";font-weight:800;color:#2a1c00;background:var(--gold);flex:none}
   .row2{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
   @media (max-width:600px){.row2{grid-template-columns:1fr}}
+  .an h4{font-size:15px;font-weight:700;margin-top:18px}
+  .an-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
+  .an-kpi{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06)}
+  .an-kpi b{display:block;font-family:"Inter";font-weight:800;font-size:28px;line-height:1.2}
+  .an-kpi small{display:block;color:var(--ink);font-size:13px;font-weight:600}
+  .an-kpi i{display:block;font-style:normal;color:var(--lav2);font-size:12px}
+  .an-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:8px}
+  .an-legend{display:flex;gap:14px;font-size:13px;color:var(--lav)}
+  .an-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:6px;vertical-align:-1px}
+  .an-chart{position:relative;margin-top:8px;direction:ltr}
+  .an-svg{display:block;width:100%;height:auto;overflow:visible}
+  .an-grid{stroke:rgba(207,198,255,.14);stroke-width:1}
+  .an-base{stroke:rgba(207,198,255,.45);stroke-width:1}
+  .an-tick{fill:var(--lav2);font:500 11px "Inter",sans-serif}
+  .an-peak{fill:var(--ink);font:700 12px "Inter",sans-serif}
+  .an-gap{fill:rgba(255,255,255,.035)}
+  .an-hit{cursor:default}.an-hit.on rect{fill:rgba(255,255,255,.06)}.an-hit.on .an-bar{filter:brightness(1.15)}
+  .an-tip{position:absolute;top:0;transform:translate(-50%,calc(-100% - 10px));pointer-events:none;opacity:0;transition:opacity .12s;
+    background:#0d0838;border:1px solid var(--panel-line);border-radius:10px;padding:6px 10px;font-size:12.5px;white-space:nowrap;direction:rtl;text-align:center}
+  .an-tip.on{opacity:1}.an-tip b{display:block;font-size:13px}
+  @media (max-width:600px){.an-tick{font-size:21px}.an-peak{font-size:22px}}
+  .an-table{margin-top:6px;font-size:13px;color:var(--lav2)}.an-table summary{cursor:pointer}
+  .an-split{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:700px){.an-split{grid-template-columns:1fr}}
+  .an-bars{margin-top:8px;display:grid;gap:8px}
+  .an-row{display:grid;grid-template-columns:minmax(90px,150px) 1fr 34px 34px;gap:8px;align-items:center;font-size:13.5px}
+  .an-row b{font-family:"Inter";text-align:left}.an-row small{color:var(--lav2);text-align:left;font-size:12px}
+  .an-track{height:10px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+  .an-fill{display:block;height:100%;border-radius:4px;background:var(--lav2)}
+  .an-moments{list-style:none;margin-top:10px;display:grid;gap:2px;border-inline-start:2px solid rgba(207,198,255,.25);padding-inline-start:14px}
+  .an-moments li{display:flex;gap:12px;align-items:baseline;font-size:14px;padding:3px 0;position:relative}
+  .an-moments li::before{content:"";position:absolute;inset-inline-start:-19px;top:12px;width:8px;height:8px;border-radius:50%;background:var(--mint)}
+  .an-moments b{font-family:"Inter";min-width:42px;color:var(--mint)}
 </style>
 </head>
 <body>
@@ -49,6 +82,7 @@
     <button class="btn" type="submit">دخول</button>
   </form>
   <section id="app" class="hide">
+    <div id="stats"></div>
     <div id="sessions"></div>
     <div class="panel sess">
       <h3 style="font-size:18px">فترة جديدة</h3>

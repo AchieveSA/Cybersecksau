@@ -1,5 +1,6 @@
 // /admin: sessions, live counts, «إعلان الفائزين», CSV export, delete a player, purge phones, reset. PIN-gated server-side.
 import { $, h, icon, api, chrome, toast, iso } from '/js/app.js'
+import { analyticsPanel } from '/js/analytics.js'
 
 chrome()
 const STATE = { draft: 'لم تبدأ', open: 'مفتوحة', frozen: 'مجمّدة', closed: 'مغلقة' }
@@ -16,6 +17,7 @@ async function login(e) {
     sessionStorage.setItem('pin', pin)
     $('#login').classList.add('hide')
     $('#app').classList.remove('hide')
+    if (!$('#stats').firstChild) $('#stats').append(analyticsPanel())
   } catch (err) {
     $('#lerr').textContent = err.message
     sessionStorage.removeItem('pin')
