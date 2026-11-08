@@ -1,6 +1,6 @@
 // Offline shell: a dropped hall Wi-Fi never white-screens a game. Pages are network-first, static files cache-first,
 // /api is never cached (answers are retried by the page itself).
-const V = 'expo-v5'
+const V = 'expo-v6'
 const SHELL = ['/', '/play.html', '/game.html', '/result.html', '/join.html', '/css/app.css', '/js/app.js', '/js/game.js', '/js/result.js',
   '/fonts/cairo-arabic-900-normal.woff2', '/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2', '/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2',
   '/fonts/inter-latin-800-normal.woff2', '/assets/brand/logo_ksau.png', '/assets/brand/cyber_mark.png', '/assets/brand/cyber_logo.png', '/assets/brand/logo_baseerah.png']

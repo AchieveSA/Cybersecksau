@@ -1,4 +1,4 @@
-// /admin: the event-day analytics panel (totals, registrations over the day, games, players by group, key moments).
+// /admin: the event-day analytics panel (totals, registrations over the day, rounds per game).
 // The figures are a fixed, seeded set shaped to the session's hours (12:00–15:00), so they
 // read the same on every refresh and every screen. Everything shown is derived from the one generated dataset, so the
 // totals, the chart and the timeline always agree with each other.
@@ -30,7 +30,6 @@ const COLOR = '#3e9be8'
 const SHAPE = [0.35, 0.85, 1.35, 1.7, 1.85, 1.6, 1.25, 0.95, 0.85, 1.0, 1.2, 1.1, 0.9, 0.7, 0.55, 0.45, 0.3, 0.2]
 const GAME_ROWS = [{ id: 'phish', label: 'صيد الاحتيال' }, { id: 'puzzles', label: 'ألغاز أمنية' }, { id: 'quiz', label: 'اختبار أمان' }]
 const GAME_W = { phish: 1.25, quiz: 1, puzzles: 0.7 } // the 5-minute puzzles get skipped most
-const GROUPS = [['الطب', 0.56], ['العلوم والمهن الصحية', 0.44]]
 
 function pick(r, weights) {
   const sum = weights.reduce((a, b) => a + b, 0)
@@ -56,7 +55,7 @@ function build() {
   const slots = counts.flatMap((c, b) => Array(c).fill(b))
   for (const b of slots) {
     const at = Math.min(END - 3, Math.max(START + 3, START + b * STEP + Math.floor(r() * STEP)))
-    const p = { at, group: GROUPS[pick(r, GROUPS.map((c) => c[1]))][0], best: {} }
+    const p = { at, best: {} }
     players.push(p)
     // 1, 2 or all 3 games; some replay one to beat their score.
     const k = pick(r, [0.12, 0.24, 0.64]) + 1
@@ -163,21 +162,11 @@ export function analyticsPanel() {
   const topScore = Math.max(...players.map((p) => p.total))
   const chart = timeChart(players)
   const gameRows = GAME_ROWS.map((g) => ({ label: g.label, n: runs.filter((x) => x.game === g.id).length }))
-  const groupRows = GROUPS.map(([c]) => ({ label: c, n: players.filter((p) => p.group === c).length })).sort((a, b) => b.n - a.n)
-
-  const moments = [
-    [START, 'فُتح التسجيل وبدأت الألعاب'],
-    [players[0].at, 'أول تسجيل'],
-    [chart.peak.from, `ذروة اليوم: ${chart.peak.n} تسجيلات خلال 10 دقائق`],
-    [players[49].at, 'وصلنا اللاعب رقم 50'],
-    [players[99].at, 'وصلنا اللاعب رقم 100'],
-    [END + 4, `إعلان الفائزين · ${total} لاعبًا`],
-  ].sort((a, b) => a[0] - b[0])
 
   return h('section', { class: 'panel sess an' },
     h('div', { class: 'sess-h' }, h('h3', { text: 'إحصاءات يوم المعرض' }), h('span', { class: 'en muted', text: '12:00 – 3:00' })),
     h('div', { class: 'an-kpis' },
-      kpi(fmt(total), 'إجمالي اللاعبين', `${groupRows[0].label} ${groupRows[0].n} · ${groupRows[1].label} ${groupRows[1].n}`),
+      kpi(fmt(total), 'إجمالي اللاعبين', 'خلال 3 ساعات'),
       kpi(fmt(runs.length), 'جولة لُعبت', `${(runs.length / total).toFixed(1)} جولة لكل لاعب`),
       kpi(`${pct(all3, total)}%`, 'أكملوا الألعاب الثلاث', `${all3} من ${total}`),
       kpi(fmt(topScore), 'أعلى مجموع', 'من 3,000'),
@@ -185,9 +174,6 @@ export function analyticsPanel() {
       kpi(hm(chart.peak.from), 'وقت الذروة', `${chart.peak.n} تسجيلات في 10 دقائق`)),
     h('h4', { text: 'التسجيلات خلال اليوم' }),
     chart.el,
-    h('div', { class: 'an-split' },
-      h('div', {}, h('h4', { text: 'الجولات حسب اللعبة' }), barList(gameRows, runs.length)),
-      h('div', {}, h('h4', { text: 'توزيع اللاعبين' }), barList(groupRows, total))),
-    h('h4', { text: 'أبرز لحظات اليوم' }),
-    h('ol', { class: 'an-moments' }, moments.map(([t, txt]) => h('li', {}, h('b', { class: 'num', text: hm(t) }), h('span', { text: txt })))))
+    h('h4', { text: 'الجولات حسب اللعبة' }),
+    barList(gameRows, runs.length))
 }
